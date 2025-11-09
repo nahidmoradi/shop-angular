@@ -1,0 +1,63 @@
+<div class="dashboard">
+  <h1>داشبورد مدیریت</h1>
+
+  @if (isLoading()) {
+    <div class="loading">در حال بارگذاری...</div>
+  } @else {
+    <div class="stats-grid">
+      <div class="stat-card products">
+        <div class="icon">📦</div>
+        <div class="info">
+          <h3>محصولات</h3>
+          <p class="number">{{ stats().totalProducts }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card categories">
+        <div class="icon">📁</div>
+        <div class="info">
+          <h3>دسته‌بندی‌ها</h3>
+          <p class="number">{{ stats().totalCategories }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card orders">
+        <div class="icon">🛒</div>
+        <div class="info">
+          <h3>سفارشات</h3>
+          <p class="number">{{ stats().totalOrders }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card revenue">
+        <div class="icon">💰</div>
+        <div class="info">
+          <h3>درآمد کل</h3>
+          <p class="number">{{ stats().totalRevenue | number }} تومان</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h2>دسترسی سریع</h2>
+      <div class="actions-grid">
+        <a routerLink="/admin/products" class="action-btn">
+          <span class="icon">➕</span>
+          <span>افزودن محصول</span>
+        </a>
+        <a routerLink="/admin/categories" class="action-btn">
+          <span class="icon">📝</span>
+          <span>مدیریت دسته‌بندی‌ها</span>
+        </a>
+        <a routerLink="/admin/orders" class="action-btn">
+          <span class="icon">📋</span>
+          <span>مشاهده سفارشات</span>
+        </a>
+        <a routerLink="/admin/users" class="action-btn">
+          <span class="icon">👥</span>
+          <span>مدیریت کاربران</span>
+        </a>
+      </div>
+    </div>
+  }
+</div>

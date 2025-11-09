@@ -1,0 +1,54 @@
+<div class="home-container">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>خوش آمدید به فروشگاه ما</h1>
+      <p>بهترین محصولات با کیفیت عالی</p>
+      <a routerLink="/products" class="btn-hero">مشاهده محصولات</a>
+    </div>
+  </section>
+
+  <section class="featured-products">
+    <h2>محصولات ویژه</h2>
+    
+    @if (isLoading()) {
+      <div class="loading">در حال بارگذاری...</div>
+    } @else if (featuredProducts().length > 0) {
+      <div class="products-grid">
+        @for (product of featuredProducts(); track product.id) {
+          <div class="product-card">
+            <a [routerLink]="['/products', product.id]">
+              <div class="product-image">
+                @if (product.images && product.images.length > 0) {
+                  <img [src]="product.images[0].url" [alt]="product.name" />
+                } @else {
+                  <div class="no-image">بدون تصویر</div>
+                }
+                @if (product.discountPrice) {
+                  <span class="badge-discount">
+                    {{ calculateDiscount(product.price, product.discountPrice) }}% تخفیف
+                  </span>
+                }
+              </div>
+              <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="category">{{ product.categoryName }}</p>
+                <div class="price-section">
+                  @if (product.discountPrice) {
+                    <span class="original-price">{{ product.price | number }} تومان</span>
+                    <span class="discount-price">{{ product.discountPrice | number }} تومان</span>
+                  } @else {
+                    <span class="price">{{ product.price | number }} تومان</span>
+                  }
+                </div>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="view-all">
+      <a routerLink="/products" class="btn-view-all">مشاهده همه محصولات</a>
+    </div>
+  </section>
+</div>

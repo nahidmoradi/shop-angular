@@ -1,0 +1,84 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>ثبت نام در فروشگاه</h2>
+    
+    @if (errorMessage()) {
+      <div class="error-message">{{ errorMessage() }}</div>
+    }
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">نام کاربری</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          placeholder="نام کاربری"
+        />
+        @if (registerForm.get('username')?.invalid && registerForm.get('username')?.touched) {
+          <span class="error">نام کاربری الزامی است</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">ایمیل</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="example@email.com"
+        />
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <span class="error">ایمیل معتبر وارد کنید</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">نام</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="نام"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">نام خانوادگی</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="نام خانوادگی"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">رمز عبور</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="رمز عبور (حداقل ۳ کاراکتر)"
+        />
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <span class="error">رمز عبور باید حداقل ۳ کاراکتر باشد</span>
+        }
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid || isLoading()" class="btn-primary">
+        @if (isLoading()) {
+          <span>در حال ثبت نام...</span>
+        } @else {
+          <span>ثبت نام</span>
+        }
+      </button>
+
+      <p class="login-link">
+        حساب کاربری دارید؟ <a routerLink="/login">وارد شوید</a>
+      </p>
+    </form>
+  </div>
+</div>

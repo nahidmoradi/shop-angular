@@ -1,0 +1,156 @@
+<div class="admin-products">
+  <div class="header">
+    <h1>مدیریت محصولات</h1>
+    <button class="btn-primary" (click)="openAddModal()">
+      ➕ افزودن محصول جدید
+    </button>
+  </div>
+
+  <div class="search-box">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+      placeholder="جستجوی محصول..."
+      class="search-input"
+    />
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">در حال بارگذاری...</div>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>شناسه</th>
+            <th>نام محصول</th>
+            <th>دسته‌بندی</th>
+            <th>قیمت</th>
+            <th>موجودی</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products(); track product.id) {
+            <tr>
+              <td>{{ product.id }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.categoryName }}</td>
+              <td>{{ product.price | number }} تومان</td>
+              <td>{{ product.stock }}</td>
+              <td>
+                <span class="badge" [class.active]="product.isActive">
+                  {{ product.isActive ? 'فعال' : 'غیرفعال' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="btn-edit" (click)="openEditModal(product)">✏️</button>
+                <button class="btn-delete" (click)="deleteProduct(product.id)">🗑️</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="no-data">محصولی یافت نشد</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)">قبلی</button>
+        <span>صفحه {{ currentPage() }} از {{ totalPages() }}</span>
+        <button [disabled]="currentPage() === totalPages()" (click)="changePage(currentPage() + 1)">بعدی</button>
+      </div>
+    }
+  }
+</div>
+
+<!-- Modal -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingProduct() ? 'ویرایش محصول' : 'افزودن محصول جدید' }}</h2>
+        <button class="close-btn" (click)="closeModal()">✖</button>
+      </div>
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>نام محصول *</label>
+            <input type="text" formControlName="name" />
+          </div>
+
+          <div class="form-group">
+            <label>SKU *</label>
+            <input type="text" formControlName="sku" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>دسته‌بندی *</label>
+          <select formControlName="categoryId">
+            <option [value]="null">انتخاب دسته‌بندی</option>
+            @for (category of categories(); track category.id) {
+              <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>توضیحات کوتاه</label>
+          <input type="text" formControlName="shortDescription" />
+        </div>
+
+        <div class="form-group">
+          <label>توضیحات کامل *</label>
+          <textarea formControlName="description" rows="4"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>قیمت (تومان) *</label>
+            <input type="number" formControlName="price" />
+          </div>
+
+          <div class="form-group">
+            <label>قیمت تخفیف (تومان)</label>
+            <input type="number" formControlName="discountPrice" />
+          </div>
+
+          <div class="form-group">
+            <label>موجودی *</label>
+            <input type="number" formControlName="stock" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" formControlName="isActive" />
+              <span>فعال</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" formControlName="isFeatured" />
+              <span>ویژه</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeModal()">انصراف</button>
+          <button type="submit" class="btn-submit" [disabled]="productForm.invalid">
+            {{ editingProduct() ? 'ذخیره تغییرات' : 'افزودن محصول' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

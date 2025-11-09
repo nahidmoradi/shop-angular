@@ -1,0 +1,39 @@
+<div class="admin-layout">
+  <aside class="sidebar" [class.closed]="!sidebarOpen">
+    <div class="sidebar-header">
+      <h2>پنل مدیریت</h2>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        {{ sidebarOpen ? '◀' : '▶' }}
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of menuItems; track item.path) {
+        <a 
+          [routerLink]="item.path" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: item.path === '/admin'}"
+          class="nav-item"
+        >
+          <span class="icon">{{ item.icon }}</span>
+          @if (sidebarOpen) {
+            <span class="label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <span class="icon">🚪</span>
+        @if (sidebarOpen) {
+          <span>خروج</span>
+        }
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content" [class.expanded]="!sidebarOpen">
+    <router-outlet />
+  </main>
+</div>

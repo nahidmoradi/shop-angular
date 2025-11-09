@@ -1,0 +1,92 @@
+<div class="admin-categories">
+  <div class="header">
+    <h1>مدیریت دسته‌بندی‌ها</h1>
+    <button class="btn-primary" (click)="openAddModal()">
+      ➕ افزودن دسته‌بندی جدید
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">در حال بارگذاری...</div>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>شناسه</th>
+            <th>نام</th>
+            <th>Slug</th>
+            <th>توضیحات</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (category of categories(); track category.id) {
+            <tr>
+              <td>{{ category.id }}</td>
+              <td>{{ category.name }}</td>
+              <td>{{ category.slug }}</td>
+              <td>{{ category.description || '-' }}</td>
+              <td>
+                <span class="badge" [class.active]="category.isActive">
+                  {{ category.isActive ? 'فعال' : 'غیرفعال' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="btn-edit" (click)="openEditModal(category)">✏️</button>
+                <button class="btn-delete" (click)="deleteCategory(category.id)">🗑️</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="no-data">دسته‌بندی یافت نشد</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingCategory() ? 'ویرایش دسته‌بندی' : 'افزودن دسته‌بندی جدید' }}</h2>
+        <button class="close-btn" (click)="closeModal()">✖</button>
+      </div>
+
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>نام دسته‌بندی *</label>
+          <input type="text" formControlName="name" />
+        </div>
+
+        <div class="form-group">
+          <label>Slug *</label>
+          <input type="text" formControlName="slug" />
+        </div>
+
+        <div class="form-group">
+          <label>توضیحات</label>
+          <textarea formControlName="description" rows="3"></textarea>
+        </div>
+
+        <div class="form-group checkbox">
+          <label>
+            <input type="checkbox" formControlName="isActive" />
+            <span>فعال</span>
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeModal()">انصراف</button>
+          <button type="submit" class="btn-submit" [disabled]="categoryForm.invalid">
+            {{ editingCategory() ? 'ذخیره تغییرات' : 'افزودن دسته‌بندی' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

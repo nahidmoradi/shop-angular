@@ -1,0 +1,77 @@
+<div class="app-container">
+  <header class="main-header">
+    <div class="header-content">
+      <div class="logo">
+        <a routerLink="/">فروشگاه آنلاین</a>
+      </div>
+
+      <nav class="main-nav">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">خانه</a>
+        <a routerLink="/products" routerLinkActive="active">محصولات</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="cart-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 2L6 6H18L15 2M7 6C6.4 6 6 6.4 6 7V18C6 18.6 6.4 19 7 19H17C17.6 19 18 18.6 18 18V7C18 6.4 17.6 6 17 6M9 10V12H15V10"/>
+          </svg>
+          @if (cartService.totalItems() > 0) {
+            <span class="cart-badge">{{ cartService.totalItems() }}</span>
+          }
+        </div>
+
+        @if (isAuthenticated()) {
+          <div class="user-menu">
+            <button class="user-button" (click)="toggleUserMenu()">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M6 21V19C6 16.8 7.8 15 10 15H14C16.2 15 18 16.8 18 19V21"/>
+              </svg>
+            </button>
+            @if (showUserMenu) {
+              <div class="user-dropdown">
+                <a routerLink="/profile">پروفایل</a>
+                <a routerLink="/orders">سفارشات</a>
+                <button (click)="logout()">خروج</button>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="auth-links">
+            <a routerLink="/login" class="btn-login">ورود</a>
+            <a routerLink="/register" class="btn-register">ثبت نام</a>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>درباره ما</h3>
+        <p>فروشگاه آنلاین با بهترین کیفیت و قیمت</p>
+      </div>
+      <div class="footer-section">
+        <h3>لینک‌های مفید</h3>
+        <ul>
+          <li><a routerLink="/about">درباره ما</a></li>
+          <li><a routerLink="/contact">تماس با ما</a></li>
+          <li><a routerLink="/faq">سوالات متداول</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>تماس با ما</h3>
+        <p>ایمیل: info@shop.com</p>
+        <p>تلفن: 021-12345678</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 تمامی حقوق محفوظ است</p>
+    </div>
+  </footer>
+</div>

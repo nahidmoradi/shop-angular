@@ -1,0 +1,76 @@
+<div class="products-container">
+  <aside class="filters">
+    <h3>دسته‌بندی‌ها</h3>
+    <ul class="category-list">
+      <li [class.active]="selectedCategoryId() === null" (click)="selectCategory(null)">
+        همه محصولات
+      </li>
+      @for (category of categories(); track category.id) {
+        <li [class.active]="selectedCategoryId() === category.id" (click)="selectCategory(category.id)">
+          {{ category.name }}
+        </li>
+      }
+    </ul>
+
+    <h3>جستجو</h3>
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+      placeholder="جستجوی محصول..."
+      class="search-input"
+    />
+  </aside>
+
+  <main class="products-main">
+    <div class="products-header">
+      <h2>محصولات</h2>
+      <span class="product-count">{{ total() }} محصول</span>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading">در حال بارگذاری...</div>
+    } @else if (products().length === 0) {
+      <div class="no-products">محصولی یافت نشد</div>
+    } @else {
+      <div class="products-grid">
+        @for (product of products(); track product.id) {
+          <div class="product-card">
+            <a [routerLink]="['/products', product.id]">
+              <div class="product-image">
+                @if (product.images && product.images.length > 0) {
+                  <img [src]="product.images[0].url" [alt]="product.name" />
+                } @else {
+                  <div class="no-image">بدون تصویر</div>
+                }
+              </div>
+              <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="category">{{ product.categoryName }}</p>
+                <div class="price-section">
+                  @if (product.discountPrice) {
+                    <span class="original-price">{{ product.price | number }} تومان</span>
+                    <span class="discount-price">{{ product.discountPrice | number }} تومان</span>
+                  } @else {
+                    <span class="price">{{ product.price | number }} تومان</span>
+                  }
+                </div>
+                @if (product.stock === 0) {
+                  <span class="out-of-stock">ناموجود</span>
+                }
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)">قبلی</button>
+          <span>صفحه {{ currentPage() }} از {{ totalPages() }}</span>
+          <button [disabled]="currentPage() === totalPages()" (click)="changePage(currentPage() + 1)">بعدی</button>
+        </div>
+      }
+    }
+  </main>
+</div>

@@ -1,0 +1,29 @@
+<div class="unauthorized-container">
+  <div class="unauthorized-card">
+    <div class="icon">🚫</div>
+    <h1>دسترسی محدود</h1>
+    
+    @if (isLoggedIn) {
+      <p class="message">
+        شما اجازه دسترسی به این صفحه را ندارید.
+      </p>
+      <p class="sub-message">
+        این بخش فقط برای مدیران سیستم در دسترس است.
+      </p>
+      
+      <div class="actions">
+        <a routerLink="/" class="btn-primary">بازگشت به صفحه اصلی</a>
+        <button (click)="logout()" class="btn-secondary">خروج و ورود با حساب دیگر</button>
+      </div>
+    } @else {
+      <p class="message">
+        برای دسترسی به این صفحه باید وارد شوید.
+      </p>
+      
+      <div class="actions">
+        <a routerLink="/login" class="btn-primary">ورود به سیستم</a>
+        <a routerLink="/" class="btn-secondary">بازگشت به صفحه اصلی</a>
+      </div>
+    }
+  </div>
+</div>

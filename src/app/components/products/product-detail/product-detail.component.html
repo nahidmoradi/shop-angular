@@ -1,0 +1,101 @@
+<div class="product-detail-container">
+  @if (isLoading()) {
+    <div class="loading">در حال بارگذاری...</div>
+  } @else if (product()) {
+    <div class="product-detail">
+      <div class="product-gallery">
+        <div class="main-image">
+          @if (selectedImage()) {
+            <img [src]="selectedImage()!" [alt]="product()!.name" />
+          } @else {
+            <div class="no-image">بدون تصویر</div>
+          }
+        </div>
+        @if (product()!.images && product()!.images.length > 1) {
+          <div class="thumbnails">
+            @for (image of product()!.images; track image.id) {
+              <img
+                [src]="image.url"
+                [alt]="image.altText || product()!.name"
+                [class.active]="selectedImage() === image.url"
+                (click)="selectImage(image.url)"
+              />
+            }
+          </div>
+        }
+      </div>
+
+      <div class="product-info">
+        <h1>{{ product()!.name }}</h1>
+        
+        @if (product()!.categoryName) {
+          <p class="category">دسته‌بندی: {{ product()!.categoryName }}</p>
+        }
+
+        <p class="sku">کد محصول: {{ product()!.sku }}</p>
+
+        <div class="price-section">
+          @if (product()!.discountPrice) {
+            <div class="price-group">
+              <span class="original-price">{{ product()!.price | number }} تومان</span>
+              <span class="discount-price">{{ product()!.discountPrice | number }} تومان</span>
+              <span class="discount-badge">
+                {{ calculateDiscount(product()!.price, product()!.discountPrice!) }}% تخفیف
+              </span>
+            </div>
+          } @else {
+            <span class="price">{{ product()!.price | number }} تومان</span>
+          }
+        </div>
+
+        <div class="stock-info">
+          @if (product()!.stock > 0) {
+            <span class="in-stock">موجود در انبار ({{ product()!.stock }} عدد)</span>
+          } @else {
+            <span class="out-of-stock">ناموجود</span>
+          }
+        </div>
+
+        <div class="short-description">
+          <p>{{ product()!.shortDescription || product()!.description }}</p>
+        </div>
+
+        <div class="actions">
+          <div class="quantity-selector">
+            <button (click)="decreaseQuantity()" [disabled]="quantity() === 1">-</button>
+            <input type="number" [value]="quantity()" readonly />
+            <button (click)="increaseQuantity()" [disabled]="quantity() >= product()!.stock">+</button>
+          </div>
+          <button
+            class="btn-add-to-cart"
+            [disabled]="product()!.stock === 0"
+            (click)="addToCart()"
+          >
+            افزودن به سبد خرید
+          </button>
+        </div>
+
+        @if (product()?.specifications && product()!.specifications!.length > 0) {
+          <div class="specifications">
+            <h3>مشخصات فنی</h3>
+            <table>
+              @for (spec of product()!.specifications!; track spec.key) {
+                <tr>
+                  <td>{{ spec.key }}</td>
+                  <td>{{ spec.value }}</td>
+                </tr>
+              }
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="description-section">
+      <h2>توضیحات محصول</h2>
+      <div [innerHTML]="product()!.description"></div>
+    </div>
+  } @else {
+    <div class="error">محصول یافت نشد</div>
+  }
+</div>
